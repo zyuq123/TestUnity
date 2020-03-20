@@ -1,0 +1,207 @@
+综合习题：使用泛型和索引器实现自己MyList集合类，MyList集合类有下面的方法和属性
+
+1.Capacity获取容量大小
+
+2.Add（）方法添加元素
+
+3.Insert（）插入元素
+
+4.[index] 访问元素
+
+5.Count属性访问元素个数
+
+6.RemoveAt（）方法一处指定位置的元素
+
+7.IndexOf（）方法取得一个元素所在列表中的索引位置
+
+  LastIndexOf（）上面的方法从前往后搜索，这个是从后往前搜索，搜到满足条件就停止没有找到返回-1
+
+8.Sort（）对列表中的元素进行从小到大的排序
+
+
+1.Capacity的实现
+
+创建一个新的类，定义一个数组。
+
+构造函数第一个当用户传入数组大小的时候，创建一个用户指定大小的数组。构造函数不传入数组的时候，创建一个大小为零的数组。
+
+Capacity的实现使用属性，返回array.Length
+
+定义一个Count存储当前存储了多少个元素
+     class MyList<T> where T:IComparable
+        {
+            private T[] array;
+            private int count; 
+     
+            public MyList(int size)
+            {
+                if(size >= 0)
+                {
+                    array = new T[size];
+                }
+            }
+            public MyList()
+            {
+                array = new T[0];
+            }
+            public int Capacity
+            {
+                get{ return array.Length; }
+            }
+            public int Count
+            {
+                get { return count; }
+            }
+        }
+
+2.Add()向数组中添加元素的功能
+
+先对数组进行判断，数组内元素满了的时候，对数组进行扩容，之后再将要添加的元素添加进入数组。
+
+            public void Add(T item)
+            {
+                
+                if(Count == Capacity)
+                {
+                    if (Capacity == 0)
+                    {
+                        array = new T[4];
+                    }
+                    else
+                    {
+                        var newArray = new T[Capacity * 2];
+                        Array.Copy(array, newArray, Count);
+                        array = newArray;
+                    }
+                }
+                array[Count] = item;
+                count++;
+            }
+
+3.索引器
+
+先创建一个函数，通过一个Index查找数组中的某个元素
+
+索引器用属性创建，用get和set方法
+
+            public T GetItem(int Index)
+            {
+                if(Index >= 0 && Index < Count)
+                {
+                    return array[Index];
+                }
+                else
+                {
+                    throw new Exception("索引超出范围");
+                }
+            }
+
+索引器去得到一个数就是调用GetItem，设置一个数是调用array，改变其中的值
+
+            public T this[int index]
+            {
+                get
+                {
+                    return GetItem(index);
+                }
+                set
+                {
+                    if (index >= 0 && index < Count)
+                    {
+                        array[index] = value;
+                    }
+                    else
+                    {
+                        throw new Exception("索引超出范围");
+                    }
+                }
+            }
+
+            static void Main(string[] args)
+            {
+                MyList<int> myList = new MyList<int>();
+                myList.Add(10);
+                myList.Add(50);
+                myList.Add(100);
+                myList.Add(6);
+                myList[0] = 0;
+                for(int i = 0; i < myList.Count; i++)
+                {
+                    //Console.WriteLine(myList.GetItem(i));
+                    Console.WriteLine(myList[i]);
+                }
+                
+                Console.ReadKey();
+            }
+
+4.Insert方法，再Index位置添加一个Item数据。
+
+实现：利用循环，从后往前将前面的数据传给后面。
+
+            public void Insert(int index,T item)
+            {
+                if (Count == Capacity)
+                {
+                    if (Capacity == 0)
+                    {
+                        array = new T[4];
+                    }
+                    else
+                    {
+                        var newArray = new T[Capacity * 2];
+                        Array.Copy(array, newArray, Count);
+                        array = newArray;
+                    }
+                }
+                for(int j = count-1; j >= index; j--)
+                {
+                    array[j+1] = array[j];
+                }
+                array[index] = item;
+                count++;
+            }
+
+5.IndexOf及LastIndexOf以及sort（）冒泡排序的实现
+
+indexOf从前往后查找，LastIndex从后往前查找，sort使用冒泡排序
+
+    public int IndexOf(T item)
+            {
+                for (int i = 0; i < count; i++)
+                {
+                    if (array[i].Equals(item))
+                    {
+                        return i;
+                    }
+                }
+                return -1;
+            }
+            public int LastIndexOf(T item)
+            {
+                for (int i = count - 1; i >= 0; i--)
+                {
+                    if (array[i].Equals(item))
+                    {
+                        return i;
+                    }
+                }
+                return -1;
+            }
+            public void Sort()
+            {
+                for (int j = 0; j < count - 1; j++)
+                {
+                    for (int i = 0; i < count - 1 - j; i++)
+                    {
+                        if (array[i].CompareTo(array[i + 1]) > 0)
+                        {
+                            T temp = array[i];
+                            array[i] = array[i+1];
+                            array[i+1] = temp;
+                        }
+                    }
+                }
+     
+            }
+
+ 参考地址：https://blog.csdn.net/Game_Builder/article/details/81138055

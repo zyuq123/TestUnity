@@ -1,0 +1,96 @@
+定义接⼝IUSB，该接⼝当中定义了数据读取的⽅法ReadData()；定义抽象类存储设备
+MemoryDevice，该抽象类MemoryDevice实现了IUSB接⼝，并且当中有抽象⽅法
+Description,⽤于不同存储设备插⼊电脑⾃我描述。存储设备分为固态硬盘SolidStateDisk，
+机械硬盘HardDisk，U盘UDisk三种。定义电脑类，该类包含功能：插⼊硬件设备。
+        /// <summary>
+        /// USB接口
+        /// </summary>
+    interface IUSB
+    {
+        /// <summary>
+        /// 读取数据方法
+        /// </summary>
+        void ReadData();
+    }
+
+    /// <summary>
+    /// 存储设备类
+    /// </summary>
+    abstract class MemoryDevice : IUSB
+    {
+        public virtual void ReadData()
+        {
+            Console.WriteLine("读取数据中。。。");
+        }
+
+        /// <summary>
+        /// 自我描述方法
+        /// </summary>
+        public abstract void Description();
+    }
+
+    /// <summary>
+    /// 固态硬盘类，继承MemoryDevice类
+    /// </summary>
+    class SolidStateDisk : MemoryDevice
+    {
+        public override void ReadData()
+        {
+            Console.WriteLine("SSD读取数据中。。。");
+        }
+
+        public override void Description()
+        {
+            Console.WriteLine("我是个固态硬盘，我的读写速度飞快！");
+        }
+
+    }
+
+    /// <summary>
+    /// 机械硬盘类，继承MemoryDevice类
+    /// </summary>
+    class HardDisk : MemoryDevice
+    {
+        public override void ReadData()
+        {
+            Console.WriteLine("HD读取数据中。。。");
+        }
+
+        public override void Description()
+        {
+            Console.WriteLine("我是机械硬盘，读写速度一般。");
+        }
+    }
+
+    /// <summary>
+    /// U盘类，继承MemoryDevice类
+    /// </summary>
+    class UDisk : MemoryDevice
+    {
+        public override void Description()
+        {
+            Console.WriteLine("我是U盘，读写速度很慢。");
+        }
+
+        public override void ReadData()
+        {
+            Console.WriteLine("U盘读取数据中。。。");
+        }
+    }
+
+    /// <summary>
+    /// 电脑类
+    /// </summary>
+    class Computer
+    {
+        /// <summary>
+        /// 插入设备方法
+        /// </summary>
+        /// <param name="memoryDevice"></param>
+        public void InputHardware(MemoryDevice memoryDevice)
+        {
+            memoryDevice.ReadData();
+            memoryDevice.Description();
+        }
+    }
+

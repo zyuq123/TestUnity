@@ -1,0 +1,134 @@
+https://www.csdn.net/gather_28/NtDacg3sNC1ibG9n.html
+习题一：泛型接口定义完成之后，就要定义此接口的子类。定义泛型接口的子类有以下两种方法。
+(1)直接在子类后声明泛型。
+(2)在子类实现的接口中明确的给出泛型类型。
+
+interface Inter<T>
+{
+    void show(T t);
+}
+//定义接口Inter的子类InterImpA,明确泛型类型为String （2）
+public class InterImpA : Inter<String>
+{
+    //子类InterImpA重写方法show,指明参数类型为string
+    public void show(String t)
+    {
+        Console.WriteLine(t);
+    }
+}
+//定义接口Inter的子类InterImpB，直接声明           （1）
+public class InterImpB<T> : Inter<T>   
+{
+    public void show(T t)
+    {
+        Console.WriteLine(t);
+    }
+}
+
+main函数该如何调用两种实现方式不同的泛型接口？
+static void Main(string[] args)
+{
+    InterImpA i = new InterImpA();
+    i.show("aaa");
+
+    InterImpB<Int32> j = new InterImpB<Int32>();
+    j.show(555);
+    Console.Read();
+}
+
+
+习题二：使用泛型类实现冒泡排序
+public class SortHelper<T> where T:IComparable
+{
+    public void BubbleSort(T[] array)
+}
+
+public class SortHelper
+{
+    public void BubbleSort<T>(T[] array) where T : IComparable
+    {
+        int length = array.Length;
+        for (int i = 0; i <= length - 2; i++)
+        {
+            for (int j = length - 1; j >= 1; j--)
+            {
+                //如果前面的元素较大，交换相邻两个元素
+                if (array[j].CompareTo(array[j - 1]) < 0)
+                {
+                    T temp = array[j];
+                    array[j] = array[j - 1];
+                    array[j - 1] = temp;
+                }
+            }
+        }
+    }
+}
+
+public class SortHelper<T> where T:IComparable
+
+{
+    public void BubbleSort(T[] array)
+    {
+        int length = array.Length;
+        for (int i = 0; i <= length - 2; i++)
+        {
+            for (int j = length-1; j >= 1; j--)
+            {
+                //如果前面的元素较大，交换相邻两个元素
+                if (array[j].CompareTo(array[j - 1]) < 0)
+                {
+                    T temp = array[j];
+                    array[j] = array[j-1];
+                    array[j-1] = temp;
+
+                }
+            }
+        }
+    } 
+}    
+
+public class Book : IComparable
+{
+    private int id;
+    private string title;
+    public Book()
+    {
+    }
+    public Book(int id, string title)
+    {
+        this.id = id;
+        this.title = title;
+    }
+    public int ID
+    {
+        get { return id; }
+        set { id = value; }
+    }
+    public string Title
+    {
+        get { return title; }
+        set { title = value; }
+    }
+    public int CompareTo(object obj)
+    {
+        Book book = (Book)obj;
+        return this.ID.CompareTo(book.ID);
+    }
+}
+
+
+
+    Book[] bookArr = new Book[2];
+    Book book1 = new Book(1, "语文");
+    Book book2 = new Book(2,"数学");
+
+    bookArr[0] = book1;
+    bookArr[1] = book2;
+
+    SortHelper<Book> Sort = new SortHelper<Book>();
+    Sort.BubbleSort(bookArr);
+    foreach (Book b in bookArr)
+    {
+        Console.WriteLine("ID={0},Title={1}",b.ID,b.Title);
+    }
+    Console.Read();
